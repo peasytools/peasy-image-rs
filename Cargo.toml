@@ -1,0 +1,19 @@
+[package]
+name = "peasy-image"
+version = "0.1.1"
+edition = "2021"
+authors = ["PeasyTools"]
+description = "Image processing library for Rust — resize, crop, compress, convert between formats, and add watermarks. Built on the image crate for pure-Rust processing."
+license = "MIT"
+repository = "https://github.com/peasytools/peasy-image-rs"
+homepage = "https://peasyimage.com"
+documentation = "https://docs.rs/peasy-image"
+readme = "README.md"
+keywords = ["image", "resize", "crop", "compress", "convert"]
+categories = ["multimedia::images", "command-line-utilities"]
+
+exclude = ["target/", "demo.gif", "demo.tape"]
+
+[dependencies]
+image = "0.25"
+thiserror = "2"
