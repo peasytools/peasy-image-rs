@@ -4,11 +4,30 @@
 [![docs.rs](https://docs.rs/peasy-image/badge.svg)](https://docs.rs/peasy-image)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Async Rust client for the [PeasyImage](https://peasyimage.com) API — resize, crop, compress, convert, and watermark images. Built with reqwest, serde, and tokio.
+Async Rust client for the [PeasyImage](https://peasyimage.com) API — compress, resize, convert, and crop images. Built with reqwest, serde, and tokio.
 
-Built from [PeasyImage](https://peasyimage.com), a free online image toolkit with tools for resizing, cropping, compressing, converting, and watermarking images across all major formats.
+Built from [PeasyImage](https://peasyimage.com), a comprehensive image processing toolkit offering free online tools for compressing, resizing, converting, and cropping images across all major formats. The site includes in-depth guides on image optimization for the web, format comparisons between WebP, AVIF, PNG, and JPEG, plus a glossary covering concepts from color spaces to alpha channels to EXIF metadata.
 
-> **Try the interactive tools at [peasyimage.com](https://peasyimage.com)** — [Image Tools](https://peasyimage.com/), [Image Glossary](https://peasyimage.com/glossary/), [Image Guides](https://peasyimage.com/guides/)
+> **Try the interactive tools at [peasyimage.com](https://peasyimage.com)** — [Compress Image](https://peasyimage.com/image/compress-image/), [Resize Image](https://peasyimage.com/image/resize-image/), [Convert Image](https://peasyimage.com/image/convert-image/), [Crop Image](https://peasyimage.com/image/crop-image/), and more.
+
+<p align="center">
+  <img src="demo.gif" alt="peasy-image demo — image compress, resize, and convert tools in Rust terminal" width="800">
+</p>
+
+## Table of Contents
+
+- [Install](#install)
+- [Quick Start](#quick-start)
+- [What You Can Do](#what-you-can-do)
+  - [Image Processing Operations](#image-processing-operations)
+  - [Browse Reference Content](#browse-reference-content)
+  - [Search and Discovery](#search-and-discovery)
+- [API Client](#api-client)
+  - [Available Methods](#available-methods)
+- [Learn More About Image Tools](#learn-more-about-image-tools)
+- [Also Available](#also-available)
+- [Peasy Developer Tools](#peasy-developer-tools)
+- [License](#license)
 
 ## Install
 
@@ -42,6 +61,118 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 ```
+
+## What You Can Do
+
+### Image Processing Operations
+
+Digital images are stored in dozens of formats, each optimized for different use cases. JPEG uses lossy compression ideal for photographs, PNG supports lossless compression with alpha channel transparency, WebP (developed by Google) offers both lossy and lossless modes at 25-34% smaller file sizes than JPEG, and AVIF (based on the AV1 video codec) pushes compression efficiency even further. PeasyImage provides tools to compress, resize, convert, and crop images across all these formats.
+
+| Operation | Slug | Description |
+|-----------|------|-------------|
+| Compress Image | `compress-image` | Reduce file size while preserving visual quality |
+| Resize Image | `resize-image` | Scale dimensions with aspect ratio preservation |
+| Convert Image | `convert-image` | Transform between PNG, JPEG, WebP, AVIF, and more |
+| Crop Image | `crop-image` | Extract rectangular regions from images |
+
+```rust
+use peasy_image::Client;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let client = Client::new();
+
+    // Retrieve the image compression tool and inspect its capabilities
+    let tool = client.get_tool("compress-image").await?;
+    println!("Tool: {}", tool.name);              // Image compression tool name
+    println!("Description: {}", tool.description); // How compression works
+
+    // List all available image tools with pagination
+    let opts = peasy_image::ListOptions {
+        page: Some(1),
+        limit: Some(20),
+        ..Default::default()
+    };
+    let tools = client.list_tools(&opts).await?;
+    println!("Total image tools available: {}", tools.count);
+
+    Ok(())
+}
+```
+
+Learn more: [Compress Image Tool](https://peasyimage.com/image/compress-image/) · [How to Compress Images for Web](https://peasyimage.com/guides/how-to-compress-images-for-web/) · [Image Format Comparison](https://peasyimage.com/guides/image-format-comparison/)
+
+### Browse Reference Content
+
+PeasyImage includes a detailed glossary of image processing and digital media terminology, plus educational guides on format selection and optimization workflows. The glossary covers concepts like WebP (Google's modern image format with superior compression), EXIF (Exchangeable Image File Format metadata embedded by cameras), lossy vs. lossless compression trade-offs, color spaces (sRGB, Adobe RGB, Display P3), and alpha channels for transparency support.
+
+| Term | Description |
+|------|-------------|
+| [WebP](https://peasyimage.com/glossary/webp/) | Google's modern image format — lossy and lossless modes |
+| [EXIF](https://peasyimage.com/glossary/exif/) | Exchangeable Image File Format — camera metadata standard |
+| [Lossy Compression](https://peasyimage.com/glossary/lossy-compression/) | Compression that discards data to achieve smaller files |
+| [Color Space](https://peasyimage.com/glossary/color-space/) | Mathematical model defining the range of representable colors |
+| [Alpha Channel](https://peasyimage.com/glossary/alpha-channel/) | Transparency layer in PNG, WebP, and AVIF images |
+
+```rust
+use peasy_image::Client;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let client = Client::new();
+
+    // Browse the image glossary for digital media terminology
+    let glossary = client.list_glossary(&peasy_image::ListOptions {
+        search: Some("webp".into()), // Search for modern image format concepts
+        ..Default::default()
+    }).await?;
+    for term in &glossary.results {
+        println!("{}: {}", term.term, term.definition);
+    }
+
+    // Read a guide on choosing the right image format
+    let guide = client.get_guide("image-format-comparison").await?;
+    println!("Guide: {} (Level: {})", guide.title, guide.audience_level);
+
+    Ok(())
+}
+```
+
+Learn more: [Image Glossary](https://peasyimage.com/glossary/) · [Image Format Comparison](https://peasyimage.com/guides/image-format-comparison/) · [How to Compress Images for Web](https://peasyimage.com/guides/how-to-compress-images-for-web/)
+
+### Search and Discovery
+
+The API supports full-text search across all content types — tools, glossary terms, guides, use cases, and format documentation. Search results are grouped by content type, making it easy to find the right tool or reference for any image processing workflow.
+
+```rust
+use peasy_image::Client;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let client = Client::new();
+
+    // Search across all image content — tools, glossary, guides, and formats
+    let results = client.search("convert webp", Some(20)).await?;
+    println!("Found {} tools, {} glossary terms, {} guides",
+        results.results.tools.len(),
+        results.results.glossary.len(),
+        results.results.guides.len(),
+    );
+
+    // Discover format conversion paths — what can PNG convert to?
+    let conversions = client.list_conversions(&peasy_image::ListConversionsOptions {
+        source: Some("png".into()), // Find all formats PNG can be converted to
+        ..Default::default()
+    }).await?;
+    for c in &conversions.results {
+        println!("{} -> {}", c.source_format, c.target_format);
+    }
+
+    Ok(())
+}
+```
+
+Learn more: [REST API Docs](https://peasyimage.com/developers/) · [All Image Tools](https://peasyimage.com/)
 
 ## API Client
 
@@ -123,12 +254,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 Full API documentation at [peasyimage.com/developers/](https://peasyimage.com/developers/).
 OpenAPI 3.1.0 spec: [peasyimage.com/api/openapi.json](https://peasyimage.com/api/openapi.json).
 
-## Learn More
+## Learn More About Image Tools
 
-- **Tools**: [Image Compress](https://peasyimage.com/image/compress-image/) · [Image Resize](https://peasyimage.com/image/resize-image/) · [Image Convert](https://peasyimage.com/image/convert-image/) · [All Tools](https://peasyimage.com/)
+- **Tools**: [Compress Image](https://peasyimage.com/image/compress-image/) · [Resize Image](https://peasyimage.com/image/resize-image/) · [Convert Image](https://peasyimage.com/image/convert-image/) · [Crop Image](https://peasyimage.com/image/crop-image/) · [All Tools](https://peasyimage.com/)
 - **Guides**: [Image Format Comparison](https://peasyimage.com/guides/image-format-comparison/) · [How to Compress Images for Web](https://peasyimage.com/guides/how-to-compress-images-for-web/) · [All Guides](https://peasyimage.com/guides/)
-- **Glossary**: [AVIF](https://peasyimage.com/glossary/avif/) · [Color Grading](https://peasyimage.com/glossary/color-grading-image/) · [Alpha Channel](https://peasyimage.com/glossary/alpha-channel/) · [All Terms](https://peasyimage.com/glossary/)
-- **Formats**: [PNG](https://peasyimage.com/formats/png/) · [WebP](https://peasyimage.com/formats/webp/) · [All Formats](https://peasyimage.com/formats/)
+- **Glossary**: [WebP](https://peasyimage.com/glossary/webp/) · [EXIF](https://peasyimage.com/glossary/exif/) · [Lossy Compression](https://peasyimage.com/glossary/lossy-compression/) · [Color Space](https://peasyimage.com/glossary/color-space/) · [Alpha Channel](https://peasyimage.com/glossary/alpha-channel/) · [All Terms](https://peasyimage.com/glossary/)
+- **Formats**: [All Formats](https://peasyimage.com/formats/)
 - **API**: [REST API Docs](https://peasyimage.com/developers/) · [OpenAPI Spec](https://peasyimage.com/api/openapi.json)
 
 ## Also Available
