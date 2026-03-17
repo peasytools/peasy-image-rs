@@ -1,7 +1,7 @@
-//! peasy-image — Image processing — resize, crop, compress, convert, watermark.
-//!
-//! Image processing library for Rust — resize, crop, compress, convert between formats, and add watermarks.
+pub mod client;
+pub mod error;
+pub mod types;
 
-mod engine;
-
-pub use engine::*;
+pub use client::Client;
+pub use error::{PeasyError, Result};
+pub use types::*;

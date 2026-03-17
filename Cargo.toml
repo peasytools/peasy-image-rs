@@ -1,19 +1,24 @@
 [package]
 name = "peasy-image"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2021"
 authors = ["PeasyTools"]
-description = "Image processing library for Rust — resize, crop, compress, convert between formats, and add watermarks. Built on the image crate for pure-Rust processing."
+description = "Rust client for PeasyImage — image tools, glossary, and guides API"
 license = "MIT"
 repository = "https://github.com/peasytools/peasy-image-rs"
 homepage = "https://peasyimage.com"
 documentation = "https://docs.rs/peasy-image"
 readme = "README.md"
-keywords = ["image", "resize", "crop", "compress", "convert"]
-categories = ["multimedia::images", "command-line-utilities"]
-
+keywords = ["image", "peasy", "api-client", "tools"]
+categories = ["api-bindings"]
 exclude = ["target/", "demo.gif", "demo.tape"]
 
 [dependencies]
-image = "0.25"
+reqwest = { version = "0.12", features = ["json"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
 thiserror = "2"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["full"] }
+wiremock = "0.6"
