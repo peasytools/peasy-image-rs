@@ -3,6 +3,8 @@
 [![crates.io](https://img.shields.io/crates/v/peasy-image)](https://crates.io/crates/peasy-image)
 [![docs.rs](https://docs.rs/peasy-image/badge.svg)](https://docs.rs/peasy-image)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![crates.io](https://agentgif.com/badge/crates/peasy-image/version.svg)](https://crates.io/crates/peasy-image)
+[![GitHub stars](https://agentgif.com/badge/github/peasytools/peasy-image-rs/stars.svg)](https://github.com/peasytools/peasy-image-rs)
 
 Async Rust client for the [PeasyImage](https://peasyimage.com) API — compress, resize, convert, and crop images. Built with reqwest, serde, and tokio.
 
